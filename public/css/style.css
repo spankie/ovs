@@ -1,0 +1,153 @@
+body {
+    --gray-darker:  #222;
+    --gray-dark:    #333;
+    --gray:         #555;
+    --gray-light:   #777;
+    --gray-lighter: #eee;
+    background-color: #202020;
+}
+.landing {
+    background-color: #f8f8f8;
+    min-height: 200px;
+}
+.landing nav {
+    border-radius: 0;
+}
+
+div.buttons a {
+    text-decoration: none;
+}
+
+div.buttons a .button {
+    margin: 0;
+    padding: 10px;
+    display: table-cell;
+    width: 150px;
+    height: 120px;
+    background-color: var(--gray);
+    color: white;
+
+}
+div.buttons a:hover {
+    color: white;
+}
+
+.election {
+    position: relative;
+    top: -25px;
+    padding: 10px;
+    background-color: var(--gray);
+    color: white;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+#eboard {
+    position: relative;
+    top: -25px;
+    background-color: var(--gray);
+    margin: 0;
+    padding: 10px;
+    box-shadow: 0px 3px 6px 0 black;
+}
+
+#eboard #top {
+    margin: 0;
+    /*border: 1px solid white;*/
+    padding: 10px;
+}
+
+#eboard hr {
+    margin: 5px 0;
+}
+
+#election {
+    margin: 0;
+    background-color: white;
+    padding: 10px 0;
+    box-shadow: 0px 2px 8px 0 black;
+}
+
+#etype {
+    padding: 0;
+}
+
+#election p, #election h3 {
+    margin: 0;
+}
+div.card h3 {
+    color: #202020;
+}
+
+.election h2 {
+    font-family: 'Vollkorn', serif;
+}
+
+#resulth3 {
+    color: white;
+}
+
+.register {
+    color: white;
+    padding: 20px;
+    box-sizing: border-box;
+    background-color: var(--gray-dark);
+    position: relative;
+    top: -80px;
+}
+
+.other {
+    height: 100px;
+    background-color: wheat;
+}
+
+.error {
+    color: red;
+}
+
+[id|=time] {
+    font-size: 15px;
+    color: brown;
+}
+
+#position {
+    margin: 0;
+}
+
+.position {
+    color: white;
+    background-color: #777;
+}
+
+.bbtt {
+    width: 50px;
+    height: 50px;
+    background-color: aqua;
+    border-radius: 25px 25px 25px 25px;
+    box-shadow: 0px 0px 10px 0 black;
+    position: relative;
+}
+
+@keyframes example {
+    0% {width: 50px; left: 10px;}
+    10% {width: 55px; left: 40px;}
+    20% {width: 60px; left: 60px;}
+    30% {width: 65px; left: 80px;}
+    40% {width: 70px; left: 100px;}
+    50% {width: 75px; left: 120px;}
+    60% {width: 80px; left: 140px;}
+    70% {width: 85px; left: 160px;}
+    80% {width: 90px; left: 180px;}
+    90% {width: 95px; left: 200px;}
+    100% {width: 100px; left: 220px;}
+}
+
+.bbtt:hover {
+    /*width: 100px;*/
+    animation-name: example;
+    animation-duration: 10s;
+    /*animation-iteration-count: 2;*/
+    /*animation-direction: alternate;*/
+    width: 100px;
+}

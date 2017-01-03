@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title><%= title %></title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/font-awesome/css/font-awesome.min.css">
+
+    <!-- fonts
+    <link href="https://fonts.googleapis.com/css?family=Vollkorn" rel="stylesheet">-->
+
+    <!-- Bootstrap -->
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='/css/style.css' />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+        function countDown(id, dd, duration) {
+            var timeDiv = document.getElementById(id);
+            var d = new Date();
+            var interval = dd - d;
+            var dSeconds = (interval / 1000).toFixed();
+            var itv = setInterval(function(){
+                var s = (dSeconds % 60);
+                var m = ((dSeconds - s) / 60) % 60;
+                var h = (((dSeconds - s) / 60) - m) / 60;
+                timeDiv.innerHTML = h + ':' + m + ':' + s;
+                dSeconds -= 1;
+                if(dSeconds <= 0 && dSeconds > (duration * 60 * 60 * -1000)) {
+                    timeDiv.innerHTML = 'Ongoing...';
+                    clearInterval(itv);
+                }
+            }, 1000);
+        }
+    </script>
+  </head>
+  <body>
+    <div class="landing">
+      <nav class="navbar navbar-default">
+        <div class="container">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header white">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand title white" href="/"><%= home %></a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right white">
+              <li><a class="link white" href="#">About</a></li>
+              <li class="dropdown">
+                <a href="#" class="link dropdown-toggle white" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Activities <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/page/register">Register Voters</a></li>
+                  <li><a href="/page/newelection">New Election</a></li>
+                  <li><a href="/page/live">Ongoing Election</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="/page/viewelection">View Elections</a></li>
+                  <li><a href="/page/viewvoters">View Voters</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Logout</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container -->
+      </nav>
+
+      <h2 align="center"><%= title %></h2>
+    </div><!-- .landing -->
+
+<% if(page == 'register') { %>
+    <div class="container register">
+        <h4 align="center" class="error">
+        <% if(typeof status != 'undefined' && status == 'inserted') { %>
+        <%= 'New Voter Registered!' %>
+        <% } else if(typeof status != 'undefined' && status == 'not_inserted') { %>
+        <%= 'Could not register!' %>
+        <% } else if (typeof status != 'undefined' && status == 'empty') { %>
+        <%= 'Some Form fields are empty' %>
+        <% } %>
+        </h4>
+        <form class="col-md-6 col-md-offset-3" method="POST" action="/page/register">
+            <div class="form-group">
+                <label for="fname">Name:</label>
+                <div class="row">
+                    <div class="col-xs-4">
+                        <input type="text" class="form-control" id="fname" name="fname" placeholder="First Name">
+                    </div>
+                    <div class="col-xs-4">
+                        <input type="text" class="form-control" id="mname" name="mname" placeholder="Middle Name">
+                    </div>
+                    <div class="col-xs-4">
+                        <input type="text" class="form-control" id="lname" name="lname" placeholder="Last Name">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="email">Email address:</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Email">
+            </div>
+            <div class="form-group has-success has-feedback">
+                <label for="vid">Voter ID:</label>(take note of the ID)
+                <input type="text" class="form-control" id="vid" name="vid" value="<%= v_id %>" readonly>
+                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true"></span>
+            </div>
+            <div class="form-group">
+                <label for="mnum">Matric Number:</label>
+                <input type="text" class="form-control" id="mnum" name="mnum" placeholder="Matric Number">
+            </div>
+            <div class="form-group">
+                <label for="dept">Department:</label>
+                <input type="text" class="form-control" id="dept" name="dept" placeholder="Department">
+            </div>
+            <div class="form-group">
+                <label for="state">State of Origin:</label>
+                <input type="text" class="form-control" id="state" name="state" placeholder="State of Origin">
+            </div>
+            <div class="form-group">
+                <label for="lga">L.G.A:</label>
+                <input type="text" class="form-control" id="lga" name="lga" placeholder="Local Government Area">
+            </div>
+            <div class="form-group">
+                <label for="addr">Address:</label>
+                <input type="text" class="form-control" id="addr" name="addr" placeholder="Address">
+            </div>
+            <div class="form-group">
+                <label for="dob">D.O.B:</label>
+                <input type="date" class="form-control" id="dob" name="dob" placeholder="Date of Birth">
+            </div>
+            <div class="form-group">
+                <label for="pass">Password</label>
+                <input type="password" class="form-control" id="pass" name="pass" placeholder="Password">
+            </div>
+            <button type="submit" name="regvoters" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+<% } else if (page == 'newelection') { %>
+    <div class="container register">
+        <% if(typeof status != 'undefined' && status == 'inserted') { %>
+            <h4 align="center" class="success">Successfully Added a new Election Date</h4>
+        <% } else if(typeof status != 'undefined' && status == 'not_inserted') { %>
+            <h4 align="center" class="error">Could not create the election Date</h4>
+        <% } else if(typeof status != 'undefined' && status == 'empty') { %>
+            <h4 align="center" class="error">Some Fields are empty</h4>
+        <% } %>
+        <form class="col-md-6 col-md-offset-3" action="/page/newelection" method="POST">
+            <div class="form-group">
+                <label for="type">Type:</label>
+                <select name="type" class="form-control">
+                    <option disabled selected>Select Type...</option>
+                    <option value='General'>General</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" class="form-control" id="date" name="date" placeholder="Date">
+            </div>
+            <div class="form-group">
+                <label for="duration">Duration(hours):</label>
+                <input type="number" class="form-control col-sm-3" id="duration" name="duration" placeholder="24">
+            </div><br><br>
+            <button type="submit" name="regelect" class="btn btn-primary btn-lg">Save</button>
+        </form>
+    </div>
+<% } else if (page == 'live') { %>
+        <div class="container">
+            <div id="eboard"><!-- class="election" -->
+                <h2 align="center">Ongoing Election Results (LIVE)</h2>
+                <hr>
+                <div class="bbtt"></div>
+            </div>
+        </div>
+<% } else if (page == 'vote') { %>
+    
+    <!-- Use ajax for voting!!! -->
+    <div class="container register">
+        <div class="col-sm-4 col-sm-offset-4" align="center">
+            <input type="text" name="matnum" class="form-control" placeholder="Matric Number"><br>
+            <button class="btn btn-success">Vote</button>
+        </div> 
+    </div>
+
+<% } else if (page == 'viewelection') { %>
+<% if (typeof e_id != 'undefined') { %>
+    <div class="container register">
+        <div class="row">
+            <form class="col-sm-4 col-sm-offset-4" action="/page/viewelection" method="POST">
+                <div class="form-group">
+                    <label for="mnum">Position</label>
+                    <select class="form-control">
+                        <option disabled selected>Select Position</option>
+                        <option>President</option>
+                        <option>Vice President</option>
+                        <option>Secretary</option>
+                        <option>Asst. Secretary</option>
+                        <option>Pro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="mnum">Matric Number</label>
+                    <input type="text" class="form-control" id="mnum" placeholder="Matric Number">
+                </div>
+                <div class="form-group">
+                    <label for="exampleInputPassword1">Password</label>
+                    <input type="password" class="form-control" id="exampleInputPassword1" placeholder="Password">
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+<% } else { %>
+    <div class="container register">
+        <div class="table-responsive col-md-8 col-md-offset-2">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>ID</th>
+                        <th>Type</th>
+                        <th>Date</th>
+                        <th>Duration</th>
+                        <th>Status</th>
+                        <th>Time Left</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% if(typeof election != 'undefined' && election != false) { %>
+                    <% election.forEach(function(item){ %>
+                        <tr>
+                            <td><a href="/page/viewelection/<%= item.id %>" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a></td>
+                            <td><%= item.id %></td>
+                            <td><%= item.type %></td>
+                            <% var d = new Date(item.date) %>
+                            <td><%= d.toDateString() %></td>
+                            <td><%= item.duration %> hours</td>
+                            <td><%= item.status %></td>
+                            <td id='time-<%= item.id %>' width="15%"></td>
+                            <script>
+                                window.onload = countDown('time-<%= item.id %>', <%= d.getTime() %>, <%= item.duration %>);
+                            </script>
+                        </tr>
+                    <% }); %>
+                    <% } %>
+                </tbody>
+            </table>
+        </div><!-- .table-responsive -->
+    </div><!-- .container.register -->
+<% } %>
+<% } %>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/js/jquery-2.1.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+  </body>
+</html>
