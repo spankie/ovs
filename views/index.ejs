@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+    <title><%= title %></title>
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css">
+
+    <!-- fonts 
+    <link href="https://fonts.googleapis.com/css?family=Vollkorn" rel="stylesheet"> -->
+
+    <!-- Bootstrap -->
+    <link href="/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel='stylesheet' href='/css/style.css' />
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <script>
+        function countDown(id, dd) {
+            var timeDiv = document.getElementById(id);
+            var d = new Date();
+            var interval = dd - d;
+            var dSeconds = (interval / 1000).toFixed();
+            setInterval(function(){
+                var s = (dSeconds % 60);
+                var m = ((dSeconds - s) / 60) % 60;
+                var h = (((dSeconds - s) / 60) - m) / 60;
+                timeDiv.innerHTML = h + ':' + m + ':' + s;
+                dSeconds -= 1;
+            }, 1000);
+        }
+
+        function countUp(id, dd) {
+            var timeDiv = document.getElementById(id);
+            // var d = new Date();
+            // var interval = dd - d;
+            var dSeconds = (dd / 1000).toFixed();
+            setInterval(function(){
+                var s = (dSeconds % 60);
+                var m = ((dSeconds - s) / 60) % 60;
+                var h = (((dSeconds - s) / 60) - m) / 60;
+                timeDiv.innerHTML = h + ':' + m + ':' + s;
+                dSeconds -= 1;
+                if(dSeconds <= 0) {
+                  location.reload(true);
+                }
+            }, 1000);
+        }
+    </script>
+  </head>
+  <body>
+    <div class="landing">
+      <nav class="navbar navbar-default">
+        <div class="container">
+          <!-- Brand and toggle get grouped for better mobile display -->
+          <div class="navbar-header white">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1" aria-expanded="false">
+              <span class="sr-only">Toggle navigation</span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand title white" href="#"><%= title %></a>
+          </div>
+
+          <!-- Collect the nav links, forms, and other content for toggling -->
+          <div class="collapse navbar-collapse" id="navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right white">
+              <li><a class="link white" href="#">About</a></li>
+              <li class="dropdown">
+                <a href="#" class="link dropdown-toggle white" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Activities <span class="caret"></span></a>
+                <ul class="dropdown-menu">
+                  <li><a href="/page/register">Register Voters</a></li>
+                  <li><a href="/page/newelection">New Election</a></li>
+                  <li><a href="/page/live">Ongoing Election</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="/page/viewelection">View Elections</a></li>
+                  <li><a href="/page/viewvoters">View Voters</a></li>
+                  <li role="separator" class="divider"></li>
+                  <li><a href="#">Logout</a></li>
+                </ul>
+              </li>
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.container -->
+      </nav>
+
+      <div class="container">
+        <h1 align="center"><%= title %></h1>
+        <p align="center">Welcome to <%= title %></p>
+        
+        <div align="center">
+          <a href="/vote" class="btn btn-lg btn-primary">VOTE</a>
+        </div><br>
+        <div class="buttons" align="center">
+          <a href="/page/register"><div class="button">Register Voters</div></a>
+          <a href="/page/newelection"><div class="button">New Election</div></a>
+          <a href="/page/live"><div class="button">Ongoing Election</div></a>
+        </div>
+      </div>
+      <br><br>
+    </div><!-- .landing -->
+
+    <div class="container">
+<% if (typeof result != 'undefined' && result == 'null' ) { %>
+    <div class="row" id="eboard">
+      <h3 align="center">NO RECENT ELECTION</h3>
+    </div>
+<% } else if (typeof result != 'undefined' && result != 'null') { %>
+  <% result.forEach(function(item) { %>
+  <% var d = new Date(item.date) %>
+  <% var today = new Date() %>
+  <% var starts = (d - today) %>
+  <% var isOn = starts < 0 ? (d.getTime() + (24 * 60 * 60 * 1000)) - today.getTime() : false %>
+  <% var dateTime = d.toDateString() + '; ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() %>
+      <div class="row" id="eboard">
+        <div class="row" id="top">
+          <div class="col-sm-4" id="election">
+            <div class="col-sm-3 col-xs-3"><img src="/img/voting.png" alt="voting" width="50px" height="50px"></div>
+            <div class="col-sm-8" id="etype"><h3><%= item.type %></h3><p>Ongoing election</p><p><%= dateTime %></p></div>
+          </div>
+          <div class="col-sm-8">
+  <% if (!isOn) { %>
+          <h4 id="resulth3">Election Starts: <span id="cd-<%= item.id %>" style="color: red"><%= //((starts / 1000) / 60).toFixed() %></span></h4>
+          <script>window.onload = countUp('cd-<%= item.id %>', <%= starts %>); </script>
+  <% } else { %>
+            <h4 id="resulth3">Election ends in: <span id="cd-<%= item.id %>" style="color: red"></span></h4>
+            <script>window.onload = countUp('cd-<%= item.id %>', <%= isOn %>); </script>
+  <% } %>
+            <h3 id="resulth3">RESULTS:</h3>
+          </div>
+        </div>
+        <hr>
+
+        <div class="row" id="position">
+          <div class="col-sm-3 position" align="center"><h4>President</h4></div>
+          <div class="col-sm-3 position" align="center"><h4>Financial Secretary</h4></div>
+          <div class="col-sm-3 position" align="center"><h4>Secretary</h4></div>
+          <div class="col-sm-3 position" align="center"><h4>P.R.O</h4></div>
+        </div>
+<hr>
+        <div class="row" id="position">
+          <div class="col-sm-3 position" align="center"><h4>Vice President</h4></div>
+          <div class="col-sm-3 position" align="center"><h4>Asst. Financial Secretary</h4></div>
+          <div class="col-sm-3 position" align="center"><h4>Asst. Secretary</h4></div>
+          <div class="col-sm-3 position" align="center"><h4>Asst. P.R.O</h4></div>
+        </div>
+      </div><!-- eboard -->
+
+  <% }); %>
+<% } %>
+    </div>
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="/js/jquery-2.1.1.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="/bootstrap/js/bootstrap.min.js"></script>
+  </body>
+</html>
