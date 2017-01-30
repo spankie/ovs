@@ -3,24 +3,20 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 
+var config = require('../models/config');
+
 var home = "Online Voting System";
 
-var conVs = { 
-  host : 'localhost',
-  user : 'root',
-  password : 'toor',
-  database : 'vs'
-};
-
 function renderForm(res, req, obj) {
-  var con = mysql.createConnection(conVs);
+
+  var con = mysql.createConnection(config.dbconf);
   
   con.connect(function(err){
     if(err){
       console.log('could not connect to DB.');
       return;
     } else {
-      console.log('GET::conected to ' + conVs.host + ':' + conVs.database);
+      console.log('GET::conected to ' + config.dbconf.host + ':' + config.dbconf.database);
     }
   });
 
@@ -51,13 +47,13 @@ router.get('/register', function(req, res, next) {
 // register student to the database...
 router.post('/register', function(req, res, next){
   console.log('POST::connecting')
-  var con = mysql.createConnection(conVs);
+  var con = mysql.createConnection(config.dbconf);
   con.connect(function(err){
     if(err){
       console.error('POST::cannot connect to database at this moment...');
       res.redirect('register');
     } else {
-      console.log('POST::conected to ' + conVs.host + ':' + conVs.database);
+      console.log('POST::conected to ' + config.dbconf.host + ':' + config.dbconf.database);
     }
   });
 
@@ -103,13 +99,13 @@ router.get('/newelection', function(req, res, next) {
 });
 
 router.post('/newelection', function(req, res, next) {
-  var con = mysql.createConnection(conVs);
+  var con = mysql.createConnection(config.dbconf);
   con.connect(function(err){
     if(err){
       console.error('POST::cannot connect to database at this moment...');
       res.redirect('newelection');
     } else {
-      console.log('POST::conected to ' + conVs.host + ':' + conVs.database);
+      console.log('POST::conected to ' + config.dbconf.host + ':' + config.dbconf.database);
     }
   });
 
@@ -143,13 +139,13 @@ router.get('/live', function(req, res, next) {
 });
 
 router.get('/viewelection', function(req, res) {
-  var con = mysql.createConnection(conVs);
+  var con = mysql.createConnection(config.dbconf);
   con.connect(function(err){
     if(err){
       console.error('GET::cannot connect to database at this moment...');
       res.redirect('/');
     } else {
-      console.log('POST::conected to ' + conVs.host + ':' + conVs.database);
+      console.log('POST::conected to ' + config.dbconf.host + ':' + config.dbconf.database);
     }
   });
 
@@ -165,14 +161,14 @@ router.get('/viewelection', function(req, res) {
 
 router.get('/viewelection/:election', function(req, res) {
   var eId = parseInt(req.params.election);
-  var con = mysql.createConnection(conVs);
+  var con = mysql.createConnection(config.dbconf);
 
   con.connect(function(err){
     if(err){
       console.error('GET::cannot connect to database at this moment...');
       res.redirect('/');
     } else {
-      console.log('POST::conected to ' + conVs.host + ':' + conVs.database);
+      console.log('POST::conected to ' + config.dbconf.host + ':' + config.dbconf.database);
     }
   });
 
