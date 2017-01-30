@@ -2,26 +2,25 @@ var express = require('express');
 var router = express.Router();
 var mysql = require('mysql');
 
+var config = require('../models/config');
+
 var home = "Online Voting System";
 
-var conVs = { 
-  host : 'localhost',
-  user : 'root',
-  password : 'toor',
-  database : 'vs'
-};
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+
+  // get session first. if sessio is not set, then the user is not logged in.
+  // provide the vote page which contains login portal.
   var obj = { title: home }
-  var con = mysql.createConnection(conVs);
+  var con = mysql.createConnection(config.dbconf);
   con.connect(function(err){
     if(err){
       console.error('GET::cannot connect to database at this moment...');
       obj.result = 'null';
       res.render('index', obj);
     } else {
-      console.log('GET::conected to ' + conVs.host + ':' + conVs.database);
+      console.log('GET::conected to ' + config.dbconf.host + ':' + config.dbconf.database);
     }
   });
 
