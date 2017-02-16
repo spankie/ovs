@@ -85,6 +85,7 @@
     </div><!-- .landing -->
 
 <% if(page == 'register') { %>
+    <script src="/js/register.js"></script>
     <div class="container register">
         <h4 align="center" class="error">
         <% if(typeof status != 'undefined' && status == 'inserted') { %>
@@ -147,6 +148,7 @@
                 <label for="pass">Password</label>
                 <input type="password" class="form-control" id="pass" name="pass" placeholder="Password">
             </div>
+            <button type="button" id="fprint" onclick="capture('<%= v_id %>')" class="btn btn-default">Get Finger print</button><br><br>
             <button type="submit" name="regvoters" class="btn btn-primary">Submit</button>
         </form>
     </div>
@@ -187,12 +189,13 @@
             </div>
         </div>
 <% } else if (page == 'vote') { %>
-    
+    <script src="/js/register.js"></script>
     <!-- Use ajax for voting!!! -->
     <div class="container register">
         <div class="col-sm-4 col-sm-offset-4" align="center">
-            <input type="text" name="matnum" class="form-control" placeholder="Matric Number"><br>
-            <button class="btn btn-success">Vote</button>
+            <input type="text" name="matnum" class="form-control" id="v_id" placeholder="Matric Number"><br>
+            <button type="button" id="verify" onclick="verify()" class="btn btn-default btn-lg">Verify</button><br><br>
+            <button class="btn btn-success" id="vote" onclick="vote()">Vote</button>
         </div> 
     </div>
 
