@@ -34,7 +34,10 @@ div.buttons a .button {
     background-size: contain;
     padding-top: 10px;
     padding-bottom: 10px;
-    
+}
+
+.f6 {
+    font-size: 8rem;
 }
 
 div.buttons a:hover {
