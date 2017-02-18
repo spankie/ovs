@@ -26,8 +26,17 @@ div.buttons a .button {
     height: 120px;
     background-color: var(--gray);
     color: white;
-
+    opacity: 0.7;
 }
+
+#landing {
+    background: url('/img/vote.jpg');
+    background-size: contain;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    
+}
+
 div.buttons a:hover {
     color: white;
 }
@@ -120,7 +129,7 @@ div.card h3 {
     background-color: #777;
 }
 
-.bbtt {
+/*.bbtt {
     width: 50px;
     height: 50px;
     background-color: aqua;
@@ -144,10 +153,10 @@ div.card h3 {
 }
 
 .bbtt:hover {
-    /*width: 100px;*/
+    /*width: 100px;*
     animation-name: example;
     animation-duration: 10s;
-    /*animation-iteration-count: 2;*/
-    /*animation-direction: alternate;*/
+    /*animation-iteration-count: 2;*
+    /*animation-direction: alternate;*
     width: 100px;
-}
+}*/
