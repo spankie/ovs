@@ -173,7 +173,7 @@ router.get('/viewelection/:election', function(req, res) {
   });
 
   con.query('SELECT * FROM election WHERE id = ?', [eId], function(err, result){
-    if(result){
+    if(result.length > 0){
       res.render('page', { home: home, title: 'Election Candidate', page: 'viewelection', e_id: eId, election: result })
       console.log("result: ", result);
     } else {
