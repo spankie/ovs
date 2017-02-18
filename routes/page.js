@@ -80,6 +80,7 @@ router.post('/register', function(req, res, next){
         console.log("POST::result on post: ", result);
         var obj = { home: home, title: 'Register Voter', page: 'register', status: 'inserted' };
         renderForm(res, req, obj);
+        
       } else {
         console.log('result on not_inserted: ', result);
         var obj = { home: home, title: 'Register Voter', page: 'register', status: 'not_inserted' };
@@ -123,8 +124,18 @@ router.post('/newelection', function(req, res, next) {
 
     con.query('INSERT INTO election SET ?', post, function(err, result){
       if(result) {
-        console.log('POST::insert successfull: ', result);
-        res.render('page', { home: home, title: 'New Election', page: 'newelection', status: 'inserted' });
+        console.log('POST::insert successfull: ', result.insertId);
+        var elect = {id: null, elect_id: result.insertId}
+        con.query('INSERT INTO candidates SET ?', elect, function(err, result1){
+          if(result) {
+            res.render('page', { home: home, title: 'New Election', page: 'newelection', status: 'inserted' });
+            console.log('POST::Candidates table successful added: ', result1.insertId);
+          }
+          else {
+            console.log('POST:: Candidates table not insserted: ', result1);
+          }
+        })
+
       } else {
         res.render('page', { home: home, title: 'New Election', page: 'newelection', status: 'not_inserted' });
       }
@@ -134,10 +145,13 @@ router.post('/newelection', function(req, res, next) {
   }
 });
 
+
+// Live elections (ongoing elections result)
 router.get('/live', function(req, res, next) {
   res.render('page', { home: home, title: 'Live Election Result', page: 'live' });
 });
 
+// View all available elections ()
 router.get('/viewelection', function(req, res) {
   var con = mysql.createConnection(config.dbconf);
   con.connect(function(err){
@@ -158,6 +172,7 @@ router.get('/viewelection', function(req, res) {
     }
   });
 });
+
 
 router.get('/viewelection/:election', function(req, res) {
   var eId = parseInt(req.params.election);
@@ -181,7 +196,56 @@ router.get('/viewelection/:election', function(req, res) {
     }
   });
 
+});
+
+router.post('/viewelection/:election', function(req, res) {
+  var resultSave;
+  var eId = parseInt(req.params.election);
+  if(isNaN(eId)) {
+    res.redirect('/page/viewelection/' + eId);
+    return;
+  }
+  var con = mysql.createConnection(config.dbconf);
+
+  con.connect(function(err){
+    if(err){
+      console.error('GET::cannot connect to database at this moment...');
+      res.redirect('/');
+      return;
+    } else {
+      console.log('POST::conected to ' + config.dbconf.host + ':' + config.dbconf.database);
+    }
+  });
   
+  var can = req.body;
+
+  con.query('SELECT v_id FROM voters WHERE v_id = ?', can.mnum, function(err, results) {
+    if(err) {
+
+      console.error("Could not check if the candidate is a registered voter.", err);
+      // res.redirect('/page/viewelection/' + eId);
+      resultSave = "You are not a voter";
+      return;
+
+    } else if(results.length > 0) {
+
+      var updateCandidate = {[can.position]: can.mnum }
+      con.query('UPDATE candidates SET ? WHERE id = ?', [updateCandidate, eId], function(err, result){
+        if(err) {
+          console.error('POST:: Could not update the candidate table');
+          res.redirect('/page/viewelection/' + eId);
+          return;
+        } else {
+          console.log("New candidate inserted");
+          resultSave = "New Candidate added";
+          res.render('page', { home: home, title: 'Election Candidate', page: 'viewelection', e_id: eId, election: result, saveResult: resultSave });
+        }
+
+      });
+
+    }
+
+  });
 
 });
 

@@ -203,10 +203,13 @@
 <% if (typeof e_id != 'undefined') { %>
     <div class="container register">
         <div class="row">
-            <form class="col-sm-4 col-sm-offset-4" action="/page/viewelection" method="POST">
+            <form class="col-sm-4 col-sm-offset-4" action="/page/viewelection/<%= e_id %>" method="POST">
+                <% if(typeof saveResult != 'undefined') { %>
+                <p><%= saveResult %></p>
+                <% } %>
                 <div class="form-group">
-                    <label for="mnum">Position</label>
-                    <select class="form-control">
+                    <label for="">Position</label>
+                    <select name="position" class="form-control">
                         <option disabled selected>Select Position</option>
                         <option value="president">President</option>
                         <option value="v_president">Vice President</option>
@@ -219,8 +222,8 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="mnum">Matric Number</label>
-                    <input type="text" class="form-control" id="mnum" placeholder="Matric Number">
+                    <label for="mnum">Voter ID</label>
+                    <input type="text" class="form-control" id="mnum" name="mnum" placeholder="Voter ID (nass0)">
                 </div>
                 <!--<div class="form-group">
                     <label for="exampleInputPassword1">Password</label>
