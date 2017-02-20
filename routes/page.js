@@ -198,6 +198,7 @@ router.get('/viewelection/:election', function(req, res) {
 
 });
 
+// add a candidate to an election...
 router.post('/viewelection/:election', function(req, res) {
   var resultSave;
   var eId = parseInt(req.params.election);
@@ -224,15 +225,15 @@ router.post('/viewelection/:election', function(req, res) {
 
       console.error("Could not check if the candidate is a registered voter.", err);
       // res.redirect('/page/viewelection/' + eId);
-      resultSave = "You are not a voter";
+      resultSave = "You are not a registered voter";
       return;
 
     } else if(results.length > 0) {
 
-      var updateCandidate = {[can.position]: can.mnum }
-      con.query('UPDATE candidates SET ? WHERE id = ?', [updateCandidate, eId], function(err, result){
+      var insertCandidate = {elect_id: eId, position: can.position, voter_id: can.mnum }
+      con.query('INSERT INTO candidates SET ?', [insertCandidate], function(err, result){
         if(err) {
-          console.error('POST:: Could not update the candidate table');
+          console.error('POST:: Could not update the candidate table: ', err);
           res.redirect('/page/viewelection/' + eId);
           return;
         } else {

@@ -3,7 +3,8 @@ var config = {
             host : 'localhost',
             user : 'root',
             password: 'toor',
-            database : 'vs'
+            database : 'vs',
+            multipleStatements: true
             // host : '169.255.59.4',
             // user : 'edbecker_ovs',
             // password : 'Admin123',

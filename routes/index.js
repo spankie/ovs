@@ -32,18 +32,104 @@ router.get('/', function(req, res, next) {
             console.log("RESULT(<1): " + typeof result);
           } else {
             obj.result = result;
-            console.log("RESULT(>1): " + typeof result);
+            console.log("RESULT(>1): " + JSON.stringify(result), "\n\nOBJ:", JSON.stringify(obj), "\n\n");
+            /*con.query("SELECT * FROM candidates WHERE elect_id = ?", [result[0].id], function(err, candidates) {
+              console.log("result.id:", result.id);
+              if(err) {
+                console.log("could not get candidates...", err);
+                res.render('index', obj);
+                return;
+              }
+              if(candidates.length > 0) {
+                obj.candidates = candidates;
+                console.log("\ncandidates: ", JSON.stringify(candidates), "\ntypeof:", typeof candidates);
+                res.render('index', obj);
+                return;
+              }else {
+                console.log("candidates:", JSON.stringify(candidates))
+                res.render('index', obj);
+              }
+
+            })*/
             res.render('index', obj);
           }
         } else {
           obj.result = 'null';
           console.log("RESULT(No result): " + typeof result);
           res.render('index', obj);
+          return;
         }
       });
     }
   });
 
 });
+
+router.post("/getresult/:id", function (req, res) {
+  var id = parseInt(req.params.id);
+  if(isNaN(id)) {
+    //res.redirect('/page/viewelection/' + eId);
+    res.setHeader('Content-Type', 'application/json');
+    res.send({error: "not a valid election id"});
+    return;
+  }
+  var con = mysql.createConnection(config.dbconf);
+
+  con.connect(function(err){
+    if(err){
+      console.error('GET::cannot connect to database at this moment...');
+      res.setHeader('Content-Type', 'application/json');
+      res.send({error: "database not available"});
+      return;
+    } else {
+      console.log('POST::conected to ' + config.dbconf.host + ':' + config.dbconf.database);
+    }
+  });
+  
+  // var can = req.body;
+  con.query("SELECT * FROM candidates WHERE elect_id = ?", [id], function(err, result) {
+    if (err) {
+      console.error('GET::could not get candidates...');
+      res.setHeader('Content-Type', 'application/json');
+      res.send({error: "Could not get candidates"});
+      return;
+    } else {
+      console.log("candidate result: ", JSON.stringify(result, null, 3))
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(result));
+      return;
+    }
+  })
+
+})
+
+router.post("/getnames/:id", function (req, res) {
+  var id = req.params.id;
+  
+  var con = mysql.createConnection(config.dbconf);
+
+  con.connect(function(err){
+    if(err){
+      console.error('GET::cannot connect to database at this moment...', err);
+      res.setHeader('Content-Type', 'application/json');
+      res.send({error: "database not available"});
+      return;
+    } else {
+      console.log('POST::conected to ' + config.dbconf.host + ':' + config.dbconf.database);
+    }
+  });
+
+  con.query("SELECT fname, lname FROM voters WHERE v_id = ?", [id], function(err, result) {
+    if(err) {
+      console.error('GET::DB query error:', err);
+      res.setHeader('Content-Type', 'application/json');
+      res.send({error: "error in query"});
+    } else {
+      console.error('GET::got names', JSON.stringify(result, null, 3));
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(result));
+    }
+  })
+})
 
 module.exports = router;
