@@ -33,24 +33,6 @@ router.get('/', function(req, res, next) {
           } else {
             obj.result = result;
             console.log("RESULT(>1): " + JSON.stringify(result), "\n\nOBJ:", JSON.stringify(obj), "\n\n");
-            /*con.query("SELECT * FROM candidates WHERE elect_id = ?", [result[0].id], function(err, candidates) {
-              console.log("result.id:", result.id);
-              if(err) {
-                console.log("could not get candidates...", err);
-                res.render('index', obj);
-                return;
-              }
-              if(candidates.length > 0) {
-                obj.candidates = candidates;
-                console.log("\ncandidates: ", JSON.stringify(candidates), "\ntypeof:", typeof candidates);
-                res.render('index', obj);
-                return;
-              }else {
-                console.log("candidates:", JSON.stringify(candidates))
-                res.render('index', obj);
-              }
-
-            })*/
             res.render('index', obj);
           }
         } else {

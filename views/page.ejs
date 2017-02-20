@@ -200,7 +200,7 @@
             <p class="text-danger" id="err"></p>
             <input type="text" name="matnum" class="form-control" id="v_id" placeholder="Voter ID"><br>
             <button type="button" id="verify" onclick="verify()" class="btn btn-default btn-lg">Verify</button><br><br>
-            <button class="btn btn-success" id="vote" onclick="vote()">Vote</button>
+            <button class="btn btn-success" id="vote" onclick="vote(<%= elect_id %>)">Vote</button>
         </div> 
     </div>
 

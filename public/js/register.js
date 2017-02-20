@@ -18,10 +18,10 @@ function verify() {
     }
 }
 
-function vote(){
+function vote(elect_id){
     var id = document.getElementById("v_id").value
-    if (id != "") {
-        window.location = "/vote/" + id;
+    if (!isNaN(elect_id) && id != "") {
+        window.location = "/vote/" + elect_id + "/" + id;
     } else {
         var err = document.getElementById("err");
         err.innerHTML = "Please provide your voter id";

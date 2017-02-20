@@ -152,9 +152,10 @@
         <h1 align="center"><%= title %></h1>
         <p align="center">Welcome to <%= title %></p>
         
-        <div align="center">
+        <!--<div align="center">
           <a href="/vote" class="btn btn-lg btn-primary">VOTE</a>
-        </div><br>
+        </div><br>-->
+        <br>
         <div class="buttons" align="center">
           <a href="/page/register"><div class="button"><i class="fa fa-plus f6"></i><br>Register Voters</div></a>
           <a href="/page/newelection"><div class="button"><i class="fa fa-pencil-square-o f6"></i><br>New Election</div></a>
@@ -190,6 +191,8 @@
             <h4 id="resulth3">Election ends in: <span id="cd-<%= item.id %>" style="color: red"></span></h4>
             <script>window.onload = countUp('cd-<%= item.id %>', <%= isOn %>); </script>
   <% } %>
+            <a href="/vote/<%= item.id %>" class="btn btn-lg btn-primary pull-right">VOTE</a>
+            <div class="cf"></div>
             <h3 id="resulth3">RESULTS:</h3>
           </div>
         </div>
