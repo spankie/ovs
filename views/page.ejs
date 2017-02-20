@@ -40,6 +40,10 @@
                     timeDiv.innerHTML = 'Ongoing...';
                     clearInterval(itv);
                 }
+                if ((d - dd) > (duration * 60 * 60 * 1000)) {
+                    timeDiv.innerHTML = 'ENDED!';
+                    clearInterval(itv);
+                }
             }, 1000);
         }
     </script>
@@ -71,7 +75,7 @@
                   <li><a href="/page/live">Ongoing Election</a></li>
                   <li role="separator" class="divider"></li>
                   <li><a href="/page/viewelection">View Elections</a></li>
-                  <li><a href="/page/viewvoters">View Voters</a></li>
+                  <!--<li><a href="/page/viewvoters">View Voters</a></li>-->
                   <li role="separator" class="divider"></li>
                   <li><a href="#">Logout</a></li>
                 </ul>
@@ -193,7 +197,8 @@
     <!-- Use ajax for voting!!! -->
     <div class="container register">
         <div class="col-sm-4 col-sm-offset-4" align="center">
-            <input type="text" name="matnum" class="form-control" id="v_id" placeholder="Matric Number"><br>
+            <p class="text-danger" id="err"></p>
+            <input type="text" name="matnum" class="form-control" id="v_id" placeholder="Voter ID"><br>
             <button type="button" id="verify" onclick="verify()" class="btn btn-default btn-lg">Verify</button><br><br>
             <button class="btn btn-success" id="vote" onclick="vote()">Vote</button>
         </div> 
@@ -252,10 +257,12 @@
                     <% if(typeof election != 'undefined' && election != false) { %>
                     <% election.forEach(function(item){ %>
                         <tr>
-                            <td><a href="/page/viewelection/<%= item.id %>" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a></td>
+                            <% var d = new Date(item.date) %>
+                            <% var now = new Date() %>
+                            <td><a href="<% if (now > d) { %><%= '#!' %><% } else { %><%= '/page/viewelection/' %><%= item.id %><% } %>" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span></a></td>
                             <td><%= item.id %></td>
                             <td><%= item.type %></td>
-                            <% var d = new Date(item.date) %>
+                            
                             <td><%= d.toDateString() %></td>
                             <td><%= item.duration %> hours</td>
                             <td><%= item.status %></td>

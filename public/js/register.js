@@ -8,13 +8,24 @@ function capture(id) {
 
 function verify() {
     var id = document.getElementById("v_id").value
-    capture(id);
+    if(id == "") {
+        var err = document.getElementById("err");
+        err.innerHTML = "Please provide your voter id";
+        return;
+    } else {
+        capture(id);
+        return;
+    }
 }
 
 function vote(){
     var id = document.getElementById("v_id").value
     if (id != "") {
         window.location = "/vote/" + id;
+    } else {
+        var err = document.getElementById("err");
+        err.innerHTML = "Please provide your voter id";
+        return;
     }
-    return
+    // return
 }

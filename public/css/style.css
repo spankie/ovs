@@ -14,6 +14,16 @@ body {
     border-radius: 0;
 }
 
+.cf {
+    clear: both;
+}
+
+.cand {
+    padding: 1rem;
+    background: white;
+    border: 1px solid grey;
+}
+
 div.buttons a {
     text-decoration: none;
 }
@@ -55,7 +65,7 @@ div.buttons a:hover {
     box-sizing: border-box;
 }
 
-#eboard {
+.eboard {
     position: relative;
     top: -25px;
     background-color: var(--gray);
@@ -64,13 +74,11 @@ div.buttons a:hover {
     box-shadow: 0px 3px 6px 0 black;
 }
 
-#eboard #top {
-    margin: 0;
-    /*border: 1px solid white;*/
+.pa10 {
     padding: 10px;
 }
 
-#eboard hr {
+.mv5 {
     margin: 5px 0;
 }
 
@@ -123,12 +131,15 @@ div.card h3 {
     color: brown;
 }
 
-#position {
+.m0 {
     margin: 0;
 }
 
-.position {
+.white {
     color: white;
+}
+
+.bg-grey {
     background-color: #777;
 }
 

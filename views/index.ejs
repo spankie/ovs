@@ -55,6 +55,60 @@
                 }
             }, 1000);
         }
+
+        function updateCandidate(elect_id) {
+          var xhttp = new XMLHttpRequest();
+
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              var can = JSON.parse(this.responseText);
+              can.forEach(function(item) {
+
+                var xhttp2 = new XMLHttpRequest();
+
+                xhttp2.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+
+                    var name = JSON.parse(this.responseText);
+                      var div = document.createElement("DIV");
+                      div.setAttribute("class", "cand");
+
+                      var spanName = document.createElement("span");
+                      spanName.setAttribute("class", "pull-left");
+
+                      var spanVote = document.createElement("span");
+                      spanVote.setAttribute("class", "pull-right");
+
+                      var divCf = document.createElement("DIV");
+                      divCf.setAttribute("class", "cf");
+                      // format the names(voterid)
+                      spanName.appendChild(document.createTextNode(name[0].fname + " " + name[0].lname + " (" + item.voter_id + ")"));
+                      spanVote.appendChild(document.createTextNode(item.votes));
+                      div.appendChild(spanName);
+                      div.appendChild(spanVote);
+                      div.appendChild(divCf);
+                      document.getElementById(item.position+"-"+elect_id).appendChild(div);
+
+                      console.log(JSON.stringify(item, null, 3));
+                  }
+                }
+
+                xhttp2.open("POST", "/getnames/" + item.voter_id, true);
+                xhttp2.send();
+              })
+            }
+          }
+
+          xhttp.open("POST", "/getresult/" + elect_id, true);
+          xhttp.send();
+
+          // example : 
+          // var btn = document.createElement("DIV");        // Create a <button> element
+          // btn.setAttribute("class", "cand");
+          // var t = document.createTextNode("CLICK ME");       // Create a text node
+          // btn.appendChild(t);                                // Append the text to <button>
+          // document.getElementById("president-"+elect_id).appendChild(btn);
+        }
     </script>
   </head>
   <body>
@@ -122,16 +176,16 @@
   <% var starts = (d - today) %>
   <% var isOn = starts < 0 ? (d.getTime() + (24 * 60 * 60 * 1000)) - today.getTime() : false %>
   <% var dateTime = d.toDateString() + '; ' + d.getHours() + ':' + d.getMinutes() + ':' + d.getSeconds() %>
-      <div class="row" id="eboard">
-        <div class="row" id="top">
+      <div class="row eboard">
+        <div class="row pa10 m0">
           <div class="col-sm-4" id="election">
             <div class="col-sm-3 col-xs-3"><img src="/img/voting.png" alt="voting" width="50px" height="50px"></div>
             <div class="col-sm-8" id="etype"><h3><%= item.type %></h3><p>Ongoing election</p><p><%= dateTime %></p></div>
           </div>
           <div class="col-sm-8">
   <% if (!isOn) { %>
-          <h4 id="resulth3">Election Starts: <span id="cd-<%= item.id %>" style="color: red"><%= //((starts / 1000) / 60).toFixed() %></span></h4>
-          <script>window.onload = countUp('cd-<%= item.id %>', <%= starts %>); </script>
+            <h4 id="resulth3">Election Starts: <span id="cd-<%= item.id %>" style="color: red"><%= //((starts / 1000) / 60).toFixed() %></span></h4>
+            <script>window.onload = countUp('cd-<%= item.id %>', <%= starts %>); </script>
   <% } else { %>
             <h4 id="resulth3">Election ends in: <span id="cd-<%= item.id %>" style="color: red"></span></h4>
             <script>window.onload = countUp('cd-<%= item.id %>', <%= isOn %>); </script>
@@ -139,23 +193,45 @@
             <h3 id="resulth3">RESULTS:</h3>
           </div>
         </div>
-        <hr>
+        <hr class="mv5">
 
-        <div class="row" id="position">
-          <div class="col-sm-3 position" align="center"><h4>President</h4></div>
-          <div class="col-sm-3 position" align="center"><h4>Financial Secretary</h4></div>
-          <div class="col-sm-3 position" align="center"><h4>Secretary</h4></div>
-          <div class="col-sm-3 position" align="center"><h4>P.R.O</h4></div>
+        <div class="row m0">
+          <div class="col-sm-3 white bg-grey" align="center"><h4>President</h4></div>
+          <div class="col-sm-3 white bg-grey" align="center"><h4>Financial Secretary</h4></div>
+          <div class="col-sm-3 white bg-grey" align="center"><h4>Secretary</h4></div>
+          <div class="col-sm-3 white bg-grey" align="center"><h4>P.R.O</h4></div>
+        </div>
+<br>
+        <div class="row">
+          <div class="col-sm-3" id="president-<%= item.id %>">
+          </div>
+          <div class="col-sm-3" id="f_secretary-<%= item.id %>">
+          </div>
+          <div class="col-sm-3" id="secretary-<%= item.id %>">
+          </div>
+          <div class="col-sm-3" id="pro-<%= item.id %>">
+          </div>
         </div>
 <hr>
-        <div class="row" id="position">
-          <div class="col-sm-3 position" align="center"><h4>Vice President</h4></div>
-          <div class="col-sm-3 position" align="center"><h4>Asst. Financial Secretary</h4></div>
-          <div class="col-sm-3 position" align="center"><h4>Asst. Secretary</h4></div>
-          <div class="col-sm-3 position" align="center"><h4>Asst. P.R.O</h4></div>
+        <div class="row m0">
+          <div class="col-sm-3 white bg-grey" align="center"><h4>Vice President</h4></div>
+          <div class="col-sm-3 white bg-grey" align="center"><h4>Asst. Financial Secretary</h4></div>
+          <div class="col-sm-3 white bg-grey" align="center"><h4>Asst. Secretary</h4></div>
+          <div class="col-sm-3 white bg-grey" align="center"><h4>Asst. P.R.O</h4></div>
+        </div>
+<br>
+        <div class="row">
+          <div class="col-sm-3" id="v_president-<%= item.id %>">
+          </div>
+          <div class="col-sm-3" id="a_f_sec-<%= item.id %>">
+          </div>
+          <div class="col-sm-3" id="a_sec-<%= item.id %>">
+          </div>
+          <div class="col-sm-3" id="a_pro-<%= item.id %>">
+          </div>
         </div>
       </div><!-- eboard -->
-
+<script>window.onload = function() { updateCandidate(<%= item.id %>); }</script>
   <% }); %>
 <% } %>
     </div>
