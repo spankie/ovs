@@ -24,7 +24,6 @@
       <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
       <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-
 </head>
   <body>
     <div class="landing">
@@ -66,40 +65,152 @@
       <h2 align="center"><%= title %></h2>
     </div><!-- .landing -->
 
-    <div class="container register">
-        <div class="">
+    <div class="container register" id="electionCand">
+        <div class="" id="president">
           <h3>President</h3>
-          <div>
-            <div class="cand text-danger"><span class="">name</span><span class="">voter id</span></div>
-            <div></div>
-            <div></div>
-          </div>
+          <!--<div class="cand text-primary vote-cand"><span class="lead">name</span>&nbsp;<span class="lead">(voter id)</span></div>-->
           <hr>
         </div>
-        <div>
+        <div id="v_president">
           <h3>Vice President</h3>
           <hr>
         </div>
+        <div class="" id="secretary">
           <h3>Secretary</h3>
           <hr>
+        </div>
+        <div class="" id="a_sec">
           <h3>Asst. Secretary</h3>
           <hr>
+        </div>
+        <div class="" id="f_secretary">
           <h3>Financial Secretary</h3>
           <hr>
+        </div>
+        <div class="" id="a_f_sec">
           <h3>Asst. Financial Secretary</h3>
           <hr>
+        </div>
+        <div class="" id="pro">
           <h3>P.R.O</h3>
           <hr>
-          <h3>Deputy P.R.O</h3>
+        </div>
+        <div class="" id="a_pro">
+          <h3>Assistant P.R.O</h3>
           <hr>
-          <button class="btn btn-primary btn-lg">DONE</button>
+        </div>
+        <br>
+        <button class="btn btn-primary btn-lg" id="submit">DONE</button>
     </div>
-
-
         <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
         <script src="/js/jquery-2.1.1.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="/bootstrap/js/bootstrap.min.js"></script>
+        <script>
+      function updateCandidate(elect_id) {
+          var xhttp = new XMLHttpRequest();
+
+          xhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+              var can = JSON.parse(this.responseText);
+              can.forEach(function(item) {
+
+                var xhttp2 = new XMLHttpRequest();
+
+                xhttp2.onreadystatechange = function() {
+                  if (this.readyState == 4 && this.status == 200) {
+
+                    var name = JSON.parse(this.responseText);
+                      var div = document.createElement("DIV");
+                      div.classList.add("cand")
+                      div.classList.add("vote-cand")
+                      div.classList.add("text-primary")
+
+                      div.setAttribute("id", item.voter_id);
+
+                      var spanName = document.createElement("span");
+                      spanName.setAttribute("class", "lead");
+
+                      var spanVote = document.createElement("span");
+                      spanVote.setAttribute("class", "lead");
+                      
+                      // format the names(voterid)
+                      spanName.appendChild(document.createTextNode(name[0].fname + " " + name[0].lname));
+                      spanVote.appendChild(document.createTextNode(" - (" + item.voter_id + ")"));
+                      div.appendChild(spanName);
+                      div.appendChild(spanVote);
+                      
+                      document.getElementById(item.position).appendChild(div);
+
+                      console.log(JSON.stringify(item, null, 3));
+                      
+                  }
+                }
+
+                xhttp2.open("POST", "/getnames/" + item.voter_id, false);
+                xhttp2.send();
+              })
+
+            }
+          }
+
+          xhttp.open("POST", "/getresult/" + elect_id, false);
+          xhttp.send();
+
+          // example : 
+          // var btn = document.createElement("DIV");        // Create a <button> element
+          // btn.setAttribute("class", "cand");
+          // var t = document.createTextNode("CLICK ME");       // Create a text node
+          // btn.appendChild(t);                                // Append the text to <button>
+          // document.getElementById("president-"+elect_id).appendChild(btn);
+        }
+    </script>
+        
+        <script>
+          var voter_id = "<%= id %>";
+          var saveBtn = document.getElementById("submit");
+          updateCandidate(<%= elect_id %>);
+          votenow();
+          voteResult = {president: "", v_president: "", secretary: "", a_sec: "", f_secretary: "", a_f_sec: "", pro: "", a_pro: ""}
+          function votenow() {
+            var elect = document.getElementById("electionCand").getElementsByTagName("div");
+            console.log("elect length: ", elect.length);
+            for(var i = 0; i < elect.length; i++) {
+              console.log("div id:", i);
+              var node = elect.item(i).getElementsByTagName("div");
+              var cat = elect.item(i).id;
+              for(var j = 0; j < node.length; j++) {
+                console.log("node id:", j);
+                node[j].addEventListener("click", function() {
+                  var pos = this.parentNode.id;
+                  var myid = this.id;
+                  var sibs = $("#" + myid).siblings();
+                  console.log("i was clicked", myid);
+                  for(var k = 0; k < sibs.length; k++) {
+                    sibs.removeClass("vote-selected");
+                  }
+                  $("#" + myid).addClass("vote-selected");
+                  voteResult[pos] = myid;
+                  console.log("my result: ", JSON.stringify(voteResult));
+                })
+              }
+
+            }
+          }
+          saveBtn.addEventListener("click", function(){
+            var xhttp = new XMLHttpRequest();
+            
+            xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+
+              }
+            }
+
+            xhttp.open("POST", "/vote/votenow/" + <%= elect_id %> + "/" + voter_id, false);
+            xhttp.setRequestHeader("Content-type", "application/json");
+            xhttp.send(JSON.stringify(voteResult));
+          })
+        </script>
     </body>
 
 </html>
