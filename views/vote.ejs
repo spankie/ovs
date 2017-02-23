@@ -113,45 +113,50 @@
           xhttp.onreadystatechange = function() {
             if (this.readyState == 4 && this.status == 200) {
               var can = JSON.parse(this.responseText);
-              can.forEach(function(item) {
+              if (can.length == 0) {
+                console.log("no data...", can);
+                document.getElementById("submit").style = "display: none";
+              } else {
+                can.forEach(function(item) {
 
-                var xhttp2 = new XMLHttpRequest();
+                  var xhttp2 = new XMLHttpRequest();
 
-                xhttp2.onreadystatechange = function() {
-                  if (this.readyState == 4 && this.status == 200) {
+                  xhttp2.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
 
-                    var name = JSON.parse(this.responseText);
-                      var div = document.createElement("DIV");
-                      div.classList.add("cand")
-                      div.classList.add("vote-cand")
-                      div.classList.add("text-primary")
+                      var name = JSON.parse(this.responseText);
+                        var div = document.createElement("DIV");
+                        div.classList.add("cand")
+                        div.classList.add("vote-cand")
+                        div.classList.add("text-primary")
 
-                      div.setAttribute("id", item.voter_id);
+                        div.setAttribute("id", item.voter_id);
 
-                      var spanName = document.createElement("span");
-                      spanName.setAttribute("class", "lead");
+                        var spanName = document.createElement("span");
+                        spanName.setAttribute("class", "lead");
 
-                      var spanVote = document.createElement("span");
-                      spanVote.setAttribute("class", "lead");
-                      
-                      // format the names(voterid)
-                      spanName.appendChild(document.createTextNode(name[0].fname + " " + name[0].lname));
-                      spanVote.appendChild(document.createTextNode(" - (" + item.voter_id + ")"));
-                      div.appendChild(spanName);
-                      div.appendChild(spanVote);
-                      
-                      document.getElementById(item.position).appendChild(div);
+                        var spanVote = document.createElement("span");
+                        spanVote.setAttribute("class", "lead");
+                        
+                        // format the names - (voterid)
+                        spanName.appendChild(document.createTextNode(name[0].fname + " " + name[0].lname));
+                        spanVote.appendChild(document.createTextNode(" - (" + item.voter_id + ")"));
+                        div.appendChild(spanName);
+                        div.appendChild(spanVote);
+                        
+                        document.getElementById(item.position).appendChild(div);
 
-                      console.log(JSON.stringify(item, null, 3));
-                      
+                        console.log(JSON.stringify(item, null, 3));
+                        
+                    }
                   }
-                }
 
-                xhttp2.open("POST", "/getnames/" + item.voter_id, false);
-                xhttp2.send();
-              })
-
+                  xhttp2.open("POST", "/getnames/" + item.voter_id, false);
+                  xhttp2.send();
+                })
+              }
             }
+            
           }
 
           xhttp.open("POST", "/getresult/" + elect_id, false);
@@ -202,7 +207,15 @@
             
             xhttp.onreadystatechange = function() {
               if (this.readyState == 4 && this.status == 200) {
-
+                var result = JSON.parse(this.responseText);
+                if(result.message == "ok") {
+                  console.log("you voted succesfully");
+                  alert("You voted successfully")
+                  window.location = "/";
+                } else if (result.message == "error") {
+                  console.log("Could not save your vote");
+                  alert("Could not save your vote")
+                }
               }
             }
 
