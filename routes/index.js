@@ -4,7 +4,7 @@ var mysql = require('mysql');
 
 var config = require('../models/config');
 
-var home = "Online Voting System";
+var home = "NASS Online Voting System";
 
 
 /* GET home page. */
