@@ -3,10 +3,12 @@ var router = express.Router();
 var config = require('../models/config');
 var mysql = require('mysql');
 
+var home = "NASS Online Voting System";
+
 /* render Vote page. */
 router.get('/:elect_id', function(req, res, next) {
   // check if the election is ongoing
-  res.render('page', { home: 'Online Voting System', title: 'Vote', page: 'vote', elect_id: req.params.elect_id });
+  res.render('page', { home: home, title: 'Vote', page: 'vote', elect_id: req.params.elect_id });
 });
 
 router.get('/:elect_id/:id', function(req, res, next) {
@@ -50,7 +52,7 @@ router.get('/:elect_id/:id', function(req, res, next) {
               res.redirect("/");
             } else {
               console.log("result:", r);
-              res.render('vote', { home: 'Online Voting System', title: 'Cast Your Vote', page: 'vote', id: req.params.id, elect_id: req.params.elect_id });
+              res.render('vote', { home: home, title: 'Cast Your Vote', page: 'vote', id: req.params.id, elect_id: req.params.elect_id });
             }
           })
         } else {
@@ -83,7 +85,7 @@ router.post('/votenow/:elect_id/:id', function(req, res, next) {
       console.log('POST::conected to ' + config.dbconf.host + ':' + config.dbconf.database);
       // res.setHeader('Content-Type', 'application/json');
       // res.send({message: "error"});
-      
+      vote();
     }
   });
 

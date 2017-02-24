@@ -48,10 +48,11 @@ div.buttons a .button {
 }
 
 #landing {
-    background: url('/img/vote.jpg');
-    background-size: contain;
-    padding-top: 10px;
+    background: url('/img/UNICAL2.jpg') no-repeat;
+    background-size: cover;
+    padding-top: 20px;
     padding-bottom: 10px;
+    height: 350px;
 }
 
 .f6 {
