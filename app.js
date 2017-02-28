@@ -4,11 +4,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
+var multer = require('multer')
 var index = require('./routes/index');
 var page = require('./routes/page');
 var vote = require('./routes/vote');
 var capture = require('./routes/capture');
+var admin = require('./routes/admin');
 
 var app = express();
 
@@ -18,16 +19,19 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+// app.use(multer().fields())
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+// app.use(bodyParser({uploadDir: path.join(__dirname, 'public/canpic')}))
 
 app.use('/', index);
 app.use('/vote', vote);
 app.use('/page', page);
 app.use('/capture', capture);
+app.use('/admin', admin);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
