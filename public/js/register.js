@@ -20,8 +20,9 @@ function verify() {
 
 function vote(elect_id){
     var id = document.getElementById("v_id").value
-    if (!isNaN(elect_id) && id != "") {
-        window.location = "/vote/" + elect_id + "/" + id;
+    var pass = document.getElementById("passwd").value
+    if (!isNaN(elect_id) && id != "" && pass != "") {
+        window.location = "/vote/" + elect_id + "/" + id + "/" + pass;
     } else {
         var err = document.getElementById("err");
         err.innerHTML = "Please provide your voter id";

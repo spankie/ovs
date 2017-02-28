@@ -11,9 +11,11 @@ router.get('/:elect_id', function(req, res, next) {
   res.render('page', { home: home, title: 'Vote', page: 'vote', elect_id: req.params.elect_id });
 });
 
-router.get('/:elect_id/:id', function(req, res, next) {
+router.get('/:elect_id/:id/:pass', function(req, res, next) {
   var elect_id = req.params.elect_id;
   var voter = req.params.id;
+  var pass = req.params.pass;
+
   var con = mysql.createConnection(config.dbconf);
 
   con.connect(function(err){
@@ -28,6 +30,7 @@ router.get('/:elect_id/:id', function(req, res, next) {
       
     }
   });
+  
   // check if the election is ongoing
   con.query("SELECT * FROM `election` WHERE id = ? AND NOW() BETWEEN date AND date + INTERVAL + 24 hour", [elect_id], function(err, r) {
     if(err) {
@@ -36,13 +39,13 @@ router.get('/:elect_id/:id', function(req, res, next) {
     }
     if (r.length > 0){
       // check if the voter is registered...
-      con.query("SELECT v_id FROM voters WHERE v_id = ?", [voter], function(err, r) {
+      con.query("SELECT v_id FROM voters WHERE v_id = ? AND pass = ?", [voter, pass], function(err, r) {
         if(err) {
           res.redirect("/");
           return;
         }
         if (r.length > 0){
-          // check if this user has voted bofore...
+          // check if this user has voted before...
           con.query("SELECT voter_id FROM voted WHERE voter_id = ? AND elect_id = ?", [voter, elect_id], function(err, r) {
             if(err) {
               res.redirect("/");

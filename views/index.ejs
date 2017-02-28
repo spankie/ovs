@@ -73,6 +73,12 @@
                       var div = document.createElement("DIV");
                       div.setAttribute("class", "cand");
 
+                      var img = document.createElement("img");
+                      img.setAttribute("class", "img-circle pull-left imr");
+                      img.setAttribute("src", "/cand/" + (item.img || 'power.png'));
+                      img.setAttribute("width", "30");
+                      img.setAttribute("height", "30");
+
                       var spanName = document.createElement("span");
                       spanName.setAttribute("class", "pull-left");
 
@@ -82,8 +88,9 @@
                       var divCf = document.createElement("DIV");
                       divCf.setAttribute("class", "cf");
                       // format the names(voterid)
-                      spanName.appendChild(document.createTextNode(name[0].fname + " " + name[0].lname + " (" + item.voter_id + ")"));
+                      spanName.appendChild(document.createTextNode(" " + name[0].fname + " " + name[0].lname + " (" + item.voter_id + ")"));
                       spanVote.appendChild(document.createTextNode(item.votes));
+                      div.appendChild(img);
                       div.appendChild(spanName);
                       div.appendChild(spanVote);
                       div.appendChild(divCf);
@@ -140,7 +147,8 @@
                   <li><a href="/page/viewelection">View Elections</a></li>
                   <li><a href="/page/viewvoters">View Voters</a></li>
                   <li role="separator" class="divider"></li>
-                  <li><a href="#">Logout</a></li>
+                  <li><a href="/admin">Admin</a></li>
+                  <li><a href="/logout">Logout</a></li>
                 </ul>
               </li>
             </ul>
