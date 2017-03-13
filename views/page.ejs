@@ -101,6 +101,10 @@
         <%= 'Some Form fields are empty' %>
         <% } else if (typeof status != 'undefined' && status == 'used') { %>
         <%= 'This matric number or email has already been registered.' %>
+		<% } else if (typeof status != 'undefined' && status == 'notSeen') { %>
+        <%= 'You are not a registered student.' %>
+		<% } else if (typeof status != 'undefined' && status == 'error') { %>
+        <%= "Sorry, can't complete your registeration now. try again later." %>
         <% } %>
         </h4>
         <form class="col-md-6 col-md-offset-3" method="POST" action="/page/register">
@@ -215,6 +219,9 @@
             <form class="col-sm-4 col-sm-offset-4" action="/page/viewelection/<%= e_id %>" enctype="multipart/form-data" method="POST">
                 <% if(typeof saveResult != 'undefined') { %>
                 <p><%= saveResult %></p>
+                <% } %>
+				<% if(typeof err != 'undefined' && err != "") { %>
+                <p class="text-danger"><%= err %></p>
                 <% } %>
                 <div class="pic">
                     <div class="img ba" id="frame">
