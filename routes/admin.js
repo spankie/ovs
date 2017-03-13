@@ -66,7 +66,7 @@ router.post("/", function(req, res, next) {
 
 router.post("/addstudent", function(req, res) {
     // remember to check if it is empty or undefined
-    if(req.body.matnum != 'undefined' || req.body.matnum != "") {
+    if(req.body.matnum == 'undefined' || req.body.matnum == "") {
         res.redirect("/admin?err=Please+fill+out+the+required+fields");
         return;
     }
