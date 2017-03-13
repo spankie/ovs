@@ -6,9 +6,11 @@ var fs = require('fs');
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/cand/')
+	  console.log("image destination");
+    cb(null, 'public\\cand\\');
   },
   filename: function (req, file, cb) {
+	  console.log("image filename")
     var arr = file.originalname.split('.');
     cb(null, file.fieldname + '-' + Date.now() + "." + arr[arr.length - 1])
   }
@@ -88,7 +90,7 @@ router.post('/register', function(req, res, next){
       con.query("SELECT * FROM voters WHERE matric_num = ? OR email = ?", [post.matric_num, post.email], function(err, result) {
         if(!err) {
           if(result.length < 1) {  
-            con.query("SELECT * FROM students WHERE matric_no = ?", [], function(err, result) {
+            con.query("SELECT * FROM students WHERE matric_no = ?", [post.matric_num], function(err, result) {
               if(!err){
                 if(result.length > 0) {
                   con.query('INSERT INTO voters SET ?', post, function(err, result){
@@ -105,9 +107,12 @@ router.post('/register', function(req, res, next){
                     }
                     
                   });
-                }
+                } else {
+					var obj = { home: home, title: 'Register Voter', page: 'register', status: 'notSeen' };
+                    renderForm(res, req, obj);
+				}
               } else {
-                var obj = { home: home, title: 'Register Voter', page: 'register', status: 'used' };
+                var obj = { home: home, title: 'Register Voter', page: 'register', status: 'error' };
                 renderForm(res, req, obj);
               }
               
@@ -215,7 +220,10 @@ router.get('/viewelection', function(req, res) {
 
 router.get('/viewelection/:election', function(req, res) {
   var eId = parseInt(req.params.election);
-
+	var errr = req.query;
+	if(errr.err){
+		res.render('page', { home: home, title: 'Add Election Candidate', page: 'viewelection', e_id: eId, err: errr.err })
+	}
   pool.getConnection(function(err, con){
     if(err){
       console.error('GET::cannot connect to database at this moment...');

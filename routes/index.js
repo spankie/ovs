@@ -130,7 +130,6 @@ router.post("/getnames/:id", function (req, res) {
 
 router.get("/logout", function(req, res) {
     res.clearCookie("auth");
-    res.
     console.log("i want to logout");
     res.redirect("/");
 })
